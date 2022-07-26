@@ -1,10 +1,11 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://vshymanskyy.github.io/StandWithUkraine/)
+
 # Symfony Notifier SMS Example 📱💬
 
 This project provides an example implementation of the [symfony notifier bundle][3] with [twilio][1] as the SMS provider.
 
 ## Preparations
 
-Install needed composer packages
 ```bash
 composer install
 ```
