@@ -41,14 +41,28 @@ class SendSmsCommand extends Command
         $this->addArgument(
             self::ARGUMENT_RECEIVER,
             InputArgument::REQUIRED,
-            'The phone number which receives the message.'
+            'The phone number which receives the message'
         );
 
         $this->addArgument(
             self::ARGUMENT_MESSAGE,
             InputArgument::OPTIONAL,
-            'The message that be send via sms.',
+            'The message that be send via sms',
             'This is an example message!'
+        );
+
+        $this->setHelp(<<<EOF
+The <info>%command.name%</info> command send a SMS to a given phone number.
+
+You must provide the phone number;
+
+  <info>php %command.full_name% phone-number</info>
+
+You can also define the message which will be sent:
+
+  <info>php %command.full_name% phone-number 'The SMS text'</info>
+
+EOF
         );
     }
 
