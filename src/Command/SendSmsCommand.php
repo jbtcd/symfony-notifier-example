@@ -9,9 +9,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Notifier\Notification\Notification;
-use Symfony\Component\Notifier\NotifierInterface;
-use Symfony\Component\Notifier\Recipient\Recipient;
+use Symfony\Component\Notifier\Exception\TransportExceptionInterface;
+use Symfony\Component\Notifier\Message\SmsMessage;
+use Symfony\Component\Notifier\TexterInterface;
 
 /**
  * Send a SMS via the twilio service.
@@ -27,11 +27,11 @@ class SendSmsCommand extends Command
     private const ARGUMENT_RECEIVER = 'receiver';
     private const ARGUMENT_MESSAGE = 'message';
 
-    private NotifierInterface $notifier;
+    private TexterInterface $texter;
 
-    public function __construct(NotifierInterface $notifier)
+    public function __construct(TexterInterface $texter)
     {
-        $this->notifier = $notifier;
+        $this->texter = $texter;
 
         parent::__construct();
     }
@@ -66,19 +66,25 @@ EOF
         );
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return int
+     *
+     * @throws TransportExceptionInterface
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $receiverPhoneNumber = $input->getArgument(self::ARGUMENT_RECEIVER);
         $message = $input->getArgument(self::ARGUMENT_MESSAGE);
 
-        $notification = new Notification($message, ['sms/twilio']);
-
-        $recipient = new Recipient(
-            '',
-            $receiverPhoneNumber
+        $smsMessage = new SmsMessage(
+            $receiverPhoneNumber,
+            $message
         );
 
-        $this->notifier->send($notification, $recipient);
+        $this->texter->send($smsMessage);
 
         return Command::SUCCESS;
     }
